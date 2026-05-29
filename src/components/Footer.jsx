@@ -43,7 +43,7 @@ export default function Footer() {
 
               <Link
                 href="#"
-                className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-600 transition hover:bg-violet-500"
+                className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/10 transition hover:bg-violet-500"
               >
                 <LogoGithub className="h-5 w-5" />
               </Link>

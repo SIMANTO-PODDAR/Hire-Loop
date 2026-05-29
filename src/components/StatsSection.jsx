@@ -49,7 +49,7 @@ export default function StatsSection() {
             <div className="absolute inset-0 bg-black/40" />
 
             {/* Glow Effect */}
-            <div className="absolute left-1/2 top-[25%] h-[400px] w-[400px] -translate-x-1/2 rounded-full bg-violet-600/30 blur-[140px]" />
+            <div className="absolute left-1/2 top-[25%] h-100 w-100 -translate-x-1/2 rounded-full bg-violet-600/30 blur-[140px]" />
 
             {/* Content */}
             <div className="relative z-10 mx-auto max-w-7xl px-6">
@@ -60,8 +60,6 @@ export default function StatsSection() {
                         <br />
                         find their dream positions.
                     </h2>
-                    <motion.p animate={{ rotate: -45 }}>Remote Jobs</motion.p>
-                    <motion.p initial={{ scale: 0 }} animate={{ scale: 1 }}>On-site Jobs</motion.p>
                 </div>
 
                 {/* Stats Cards */}
@@ -69,7 +67,7 @@ export default function StatsSection() {
                     {stats.map((stat) => (
                         <div
                             key={stat.id}
-                            className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur-xl transition duration-300 hover:border-violet-500/30"
+                            className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/3 p-8 backdrop-blur-xl transition duration-300 hover:border-violet-500/30"
                         >
                             {/* Card Glow */}
                             <div className="absolute bottom-0 right-0 h-32 w-32 rounded-full bg-white/10 blur-3xl transition duration-300 group-hover:bg-violet-500/20" />
