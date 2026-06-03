@@ -2,7 +2,7 @@
 import GoogleLoginButton from "@/Components/GoogleLoginButton";
 import { authClient } from "@/lib/auth-client";
 import { Check, Eye, EyeSlash } from "@gravity-ui/icons";
-import { Button, Description, FieldError, Form, Input, InputGroup, Label, TextField } from "@heroui/react";
+import { Button, Description, FieldError, Form, Input, InputGroup, Label, ListBox, Radio, RadioGroup, TextField, Select } from "@heroui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -18,15 +18,15 @@ const RegistrationPage = () => {
 
         const name = e.target.name.value;
         const email = e.target.email.value;
-        const photo = e.target.photo.value;
         const password = e.target.password.value;
+        const role = e.target.role.value;
 
-        const { data, error } = await authClient.signUp.email(
+        const { error } = await authClient.signUp.email(
             {
                 name: name,
                 email: email,
                 password: password,
-                image: photo,
+                role: role,
             },
 
             {
@@ -35,10 +35,10 @@ const RegistrationPage = () => {
                         id: LoadingToast
                     });
                     await authClient.signOut();
-                    router.push('/login');
+                    router.push('/auth/signin');
                 }
             }
-        );
+        )
 
         if (error) {
             toast.error(error.message, {
@@ -142,6 +142,38 @@ const RegistrationPage = () => {
                             <FieldError />
 
                         </TextField>
+
+                        {/* Role Selection */} 
+                        <div>
+                            <Select
+                                name="role"
+                                className="w-full"
+                                placeholder="Yes/No"
+                                defaultValue="seeker"
+                            >
+                                <Label>Subscription plan</Label>
+                                <Select.Trigger className="rounded-xl">
+                                    <Select.Value />
+                                    <Select.Indicator />
+                                </Select.Trigger>
+                                <Select.Popover>
+                                    <ListBox>
+
+                                        <ListBox.Item id="seeker" textValue="seeker">
+                                            Job Seeker
+                                            <ListBox.ItemIndicator />
+                                        </ListBox.Item>
+
+                                        <ListBox.Item id="recruiter" textValue="recruiter">
+                                            Recruiter
+                                            <ListBox.ItemIndicator />
+                                        </ListBox.Item>
+
+                                    </ListBox>
+                                </Select.Popover>
+                                <FieldError />
+                            </Select>
+                        </div> 
 
                         <div className="flex gap-2 justify-end">
                             <button type="submit" className="btn text-violet-500 w-full rounded-2xl hover:text-white hover:bg-linear-to-br from-violet-600 to-fuchsia-500">
