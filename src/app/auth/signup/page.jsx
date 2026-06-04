@@ -2,7 +2,7 @@
 import GoogleLoginButton from "@/Components/GoogleLoginButton";
 import { authClient } from "@/lib/auth-client";
 import { Check, Eye, EyeSlash } from "@gravity-ui/icons";
-import { Button, Description, FieldError, Form, Input, InputGroup, Label, ListBox, Radio, RadioGroup, TextField, Select } from "@heroui/react";
+import { Button, Description, FieldError, Form, Input, InputGroup, Label, ListBox, TextField, Select } from "@heroui/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -143,7 +143,7 @@ const RegistrationPage = () => {
 
                         </TextField>
 
-                        {/* Role Selection */} 
+                        {/* Role Selection */}
                         <div>
                             <Select
                                 name="role"
@@ -173,7 +173,7 @@ const RegistrationPage = () => {
                                 </Select.Popover>
                                 <FieldError />
                             </Select>
-                        </div> 
+                        </div>
 
                         <div className="flex gap-2 justify-end">
                             <button type="submit" className="btn text-violet-500 w-full rounded-2xl hover:text-white hover:bg-linear-to-br from-violet-600 to-fuchsia-500">
