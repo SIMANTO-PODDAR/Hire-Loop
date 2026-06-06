@@ -1,196 +1,180 @@
-"use client"
-import GoogleLoginButton from "@/Components/GoogleLoginButton";
-import { authClient } from "@/lib/auth-client";
-import { Check, Eye, EyeSlash } from "@gravity-ui/icons";
-import { Button, Description, FieldError, Form, Input, InputGroup, Label, ListBox, TextField, Select } from "@heroui/react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+"use client";
+
 import { useState } from "react";
-import toast from "react-hot-toast";
+import { Card, Button, Link, TextField, Label, InputGroup, Input } from "@heroui/react";
+import { Radio, RadioGroup } from "@heroui/react";
 
-const RegistrationPage = () => {
-    const [eyeSlash, setEyeSlash] = useState(false);
-    const router = useRouter();
+import { Eye, EyeSlash, Person, At, ShieldKeyhole } from "@gravity-ui/icons";
+import { signUp } from "@/lib/auth-client";
 
-    const Registration = async (e) => {
+export default function SignupPage() {
+    // Form fields
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [role, setRole] = useState("seeker");
+
+    // UI States
+    const [isVisible, setIsVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+
+    const toggleVisibility = () => setIsVisible(!isVisible);
+
+    const handleSignup = async (e) => {
         e.preventDefault();
-        const LoadingToast = toast.loading('Processing your request..');
 
-        const name = e.target.name.value;
-        const email = e.target.email.value;
-        const password = e.target.password.value;
-        const role = e.target.role.value;
+        setError("");
+        setSuccess("");
+        setIsLoading(true);
 
-        const { error } = await authClient.signUp.email(
-            {
-                name: name,
-                email: email,
-                password: password,
-                role: role,
-            },
+        try {
+            const { data, error: authError } = await signUp.email({
+                email,
+                password,
+                name,
+                role,
+                callbackURL: "/",
+            });
 
-            {
-                onSuccess: async () => {
-                    toast.success("Registration completed successfully.", {
-                        id: LoadingToast
-                    });
-                    await authClient.signOut();
-                    router.push('/auth/signin');
-                }
+            if (authError) {
+                setError(authError.message || "Something went wrong during signup.");
+            } else {
+                setSuccess("Account created successfully! Welcome.");
+                setName("");
+                setEmail("");
+                setPassword("");
             }
-        )
-
-        if (error) {
-            toast.error(error.message, {
-                id: LoadingToast
-            })
-        };
+        } catch (err) {
+            setError("An unexpected network error occurred.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
-        <div>
-            {/* <div>
-                <h2 className="text-4xl text-[#0D0D33] md:text-5xl font-bold mb-4 mt-5 text-center">
-                    
-                </h2>
+        <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-zinc-950 px-4">
+            <Card className="w-full max-w-md p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
 
-                <p className="text-[#0D0D33] max-w-2xl mx-auto text-center text-lg">
-                  
-                </p>
-            </div> */}
-
-            <div className="mt-2 sm:mt-10 mb-10 p-7 sm:p-0 flex justify-center scale-90 sm:scale-100">
-
-                <div className="justify-center mt-5">
-
-                    <Form className="flex w-96 flex-col gap-4"
-                        onSubmit={Registration}
-                    >
-
-                        {/* Name */}
-                        <TextField
-                            isRequired
-                            name="name"
-                            type="text"
-                        >
-                            <Label>Name</Label>
-                            <Input placeholder="Enter your Name" />
-                            <FieldError />
-                        </TextField>
-
-
-                        {/* Email */}
-                        <TextField
-                            isRequired
-                            name="email"
-                            type="email"
-                            validate={(value) => {
-                                if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
-                                    return "Please enter a valid email address";
-                                }
-                                return null;
-                            }}
-                        >
-                            <Label>Email</Label>
-                            <Input placeholder="Enter your Email" autoComplete="username" />
-                            <FieldError />
-                        </TextField>
-
-                        {/* Password */}
-                        <TextField
-                            isRequired
-                            minLength={8}
-                            name="password"
-                            type="password"
-                            validate={(value) => {
-                                if (value.length < 8) {
-                                    return "Password must be at least 8 characters";
-                                }
-                                if (!/[A-Z]/.test(value)) {
-                                    return "Password must contain at least one uppercase letter";
-                                }
-                                if (!/[a-z]/.test(value)) {
-                                    return "Password must contain at least one lowercase letter";
-                                }
-                                if (!/[0-9]/.test(value)) {
-                                    return "Password must contain at least one number";
-                                }
-                                return null;
-                            }}>
-                            <Label>Password</Label>
-
-                            <InputGroup>
-                                <InputGroup.Input
-                                    className="w-full"
-                                    placeholder="Enter your Password"
-                                    type={eyeSlash ? "text" : "password"}
-                                    autoComplete="current-password"
-                                />
-                                <InputGroup.Suffix className="pr-0">
-                                    <Button
-                                        isIconOnly
-                                        size="sm"
-                                        variant="ghost"
-                                        onPress={() => setEyeSlash(!eyeSlash)}
-                                    >
-                                        {eyeSlash ? <Eye className="size-4" /> : <EyeSlash className="size-4" />}
-                                    </Button>
-                                </InputGroup.Suffix>
-                            </InputGroup>
-
-                            <Description>Must be at least 8 characters with 1 uppercase, 1 lowercase and 1 number</Description>
-                            <FieldError />
-
-                        </TextField>
-
-                        {/* Role Selection */}
-                        <div>
-                            <Select
-                                name="role"
-                                className="w-full"
-                                placeholder="Yes/No"
-                                defaultValue="seeker"
-                            >
-                                <Label>Subscription plan</Label>
-                                <Select.Trigger className="rounded-xl">
-                                    <Select.Value />
-                                    <Select.Indicator />
-                                </Select.Trigger>
-                                <Select.Popover>
-                                    <ListBox>
-
-                                        <ListBox.Item id="seeker" textValue="seeker">
-                                            Job Seeker
-                                            <ListBox.ItemIndicator />
-                                        </ListBox.Item>
-
-                                        <ListBox.Item id="recruiter" textValue="recruiter">
-                                            Recruiter
-                                            <ListBox.ItemIndicator />
-                                        </ListBox.Item>
-
-                                    </ListBox>
-                                </Select.Popover>
-                                <FieldError />
-                            </Select>
-                        </div>
-
-                        <div className="flex gap-2 justify-end">
-                            <button type="submit" className="btn text-violet-500 w-full rounded-2xl hover:text-white hover:bg-linear-to-br from-violet-600 to-fuchsia-500">
-                                <Check />
-                                Register
-                            </button>
-                        </div>
-                        <div className="divider mt-0">OR</div>
-                    </Form>
-
-                    <GoogleLoginButton BtnFor={'Register'} />
-
-                    <h1 className="font-bold text-center opacity-80 mt-3">Existing account? Continue with <Link href='/auth/signin' className="underline italic text-violet-500 opacity-100">Login</Link></h1>
+                {/* Header Container */}
+                <div className="flex flex-col items-center justify-center gap-1 pb-6 border-b border-zinc-100 dark:border-zinc-800 mb-6 text-center">
+                    <h1 className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">Create an account</h1>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400">Fill in the fields below to get started</p>
                 </div>
-            </div>
+
+                {/* Form Body */}
+                <form onSubmit={handleSignup} className="flex flex-col gap-5">
+
+                    {/* Name Field */}
+                    <TextField isRequired name="name" className="flex flex-col gap-1.5">
+                        <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Name</Label>
+                        <InputGroup className="flex items-center gap-2 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 bg-zinc-50 dark:bg-zinc-900 focus-within:border-primary transition-colors">
+                            <Person className="text-zinc-400 pointer-events-none" size={16} />
+                            <Input
+                                type="text"
+                                placeholder="Enter your full name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="w-full bg-transparent py-2 text-sm outline-none border-none text-zinc-900 dark:text-zinc-100"
+                            />
+                        </InputGroup>
+                    </TextField>
+
+                    {/* Email Field */}
+                    <TextField isRequired name="email" type="email" className="flex flex-col gap-1.5">
+                        <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Email Address</Label>
+                        <InputGroup className="flex items-center gap-2 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 bg-zinc-50 dark:bg-zinc-900 focus-within:border-primary transition-colors">
+                            <At className="text-zinc-400 pointer-events-none" size={16} />
+                            <Input
+                                placeholder="you@example.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full bg-transparent py-2 text-sm outline-none border-none text-zinc-900 dark:text-zinc-100"
+                            />
+                        </InputGroup>
+                    </TextField>
+
+                    {/* Password Field */}
+                    <TextField isRequired name="password" className="flex flex-col gap-1.5">
+                        <Label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Password</Label>
+                        <InputGroup className="flex items-center gap-2 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 bg-zinc-50 dark:bg-zinc-900 focus-within:border-primary transition-colors">
+                            <ShieldKeyhole className="text-zinc-400 pointer-events-none" size={16} />
+                            <Input
+                                type={isVisible ? "text" : "password"}
+                                placeholder="Choose a password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full bg-transparent py-2 text-sm outline-none border-none text-zinc-900 dark:text-zinc-100"
+                            />
+                            <button
+                                className="focus:outline-none text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition"
+                                type="button"
+                                onClick={toggleVisibility}
+                                aria-label="toggle password visibility"
+                            >
+                                {isVisible ? <EyeSlash size={18} /> : <Eye size={18} />}
+                            </button>
+                        </InputGroup>
+                    </TextField>
+
+                    {/* Role Selection */}
+                    <div className="flex flex-col gap-4">
+                        <Label>Subscription plan</Label>
+                        <RadioGroup defaultValue="seeker" name="role" onChange={value => setRole(value)} orientation="horizontal">
+                            <Radio value="seeker">
+                                <Radio.Control>
+                                    <Radio.Indicator />
+                                </Radio.Control>
+                                <Radio.Content>
+                                    <Label>Job Seeker</Label>
+                                </Radio.Content>
+                            </Radio>
+                            <Radio value="recruiter">
+                                <Radio.Control>
+                                    <Radio.Indicator />
+                                </Radio.Control>
+                                <Radio.Content>
+                                    <Label>Recruiter</Label>
+                                </Radio.Content>
+                            </Radio>
+                        </RadioGroup>
+                    </div>
+
+                    {/* Dynamic Status Badges */}
+                    {error && (
+                        <div className="p-3.5 text-xs font-medium rounded-xl bg-red-100/60 dark:bg-red-950/50 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-900">
+                            <span className="font-semibold">Error:</span> {error}
+                        </div>
+                    )}
+
+                    {success && (
+                        <div className="p-3.5 text-xs font-medium rounded-xl bg-emerald-100/60 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900">
+                            <span className="font-semibold">Success:</span> {success}
+                        </div>
+                    )}
+
+                    {/* Action Button */}
+                    <Button
+                        type="submit"
+                        color="primary"
+                        className="w-full font-semibold rounded-xl text-sm h-12"
+                        isLoading={isLoading}
+                        isDisabled={isLoading}
+                    >
+                        Sign Up
+                    </Button>
+
+                    {/* Navigation Option */}
+                    <div className="text-center pt-4 border-t border-zinc-100 dark:border-zinc-800 mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                        Already have an account?{" "}
+                        <Link href="/auth/signin" className="font-medium cursor-pointer text-sm text-blue-600 dark:text-blue-400">
+                            Sign in instead
+                        </Link>
+                    </div>
+
+                </form>
+            </Card>
         </div>
     );
-};
-
-export default RegistrationPage;
+}
