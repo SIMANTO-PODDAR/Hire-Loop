@@ -61,7 +61,7 @@ const Page = async ({ params }) => {
                         </h1>
                     </div>
 
-
+                    
 
                     {/* Section: Responsibilities */}
                     <section className="space-y-3">
@@ -99,7 +99,7 @@ const Page = async ({ params }) => {
                     <div className="space-y-4">
                         {/* Location Element */}
                         <div className="flex items-start gap-3">
-                            <MapPin className="text-purple-400 w-5 h-5 mt-0.5 shrink-0" />
+                            <MapPin className="text-purple-400 w-5 h-5 mt-0.5 flex-shrink-0" />
                             <div>
                                 <span className="text-xs text-zinc-500 block">Location</span>
                                 <span className="text-sm font-medium text-zinc-200">
@@ -110,7 +110,7 @@ const Page = async ({ params }) => {
 
                         {/* Position Type Element */}
                         <div className="flex items-start gap-3">
-                            <Briefcase className="text-purple-400 w-5 h-5 mt-0.5 shrink-0" />
+                            <Briefcase className="text-purple-400 w-5 h-5 mt-0.5 flex-shrink-0" />
                             <div>
                                 <span className="text-xs text-zinc-500 block">Job Type</span>
                                 <span className="text-sm font-medium text-zinc-200 capitalize">{job.jobType}</span>
@@ -119,7 +119,7 @@ const Page = async ({ params }) => {
 
                         {/* Comp/Salary Element */}
                         <div className="flex items-start gap-3">
-                            <CircleDollar className="text-purple-400 w-5 h-5 mt-0.5 shrink-0" />
+                            <CircleDollar className="text-purple-400 w-5 h-5 mt-0.5 flex-shrink-0" />
                             <div>
                                 <span className="text-xs text-zinc-500 block">Salary Range</span>
                                 <span className="text-sm font-medium text-zinc-200">
@@ -132,7 +132,7 @@ const Page = async ({ params }) => {
 
                         {/* Deadline Element */}
                         <div className="flex items-start gap-3">
-                            <Calendar className="text-purple-400 w-5 h-5 mt-0.5 shrink-0" />
+                            <Calendar className="text-purple-400 w-5 h-5 mt-0.5 flex-shrink-0" />
                             <div>
                                 <span className="text-xs text-zinc-500 block">Application Deadline</span>
                                 <span className="text-sm font-medium text-zinc-200">{formatDate(job.deadline)}</span>
@@ -140,17 +140,16 @@ const Page = async ({ params }) => {
                         </div>
                     </div>
 
-
+                    
 
                     {/* Action Button: Apply Routing Link Container */}
-                    <Button
-                        as={Link}
+                    <Link
                         href={`/jobs/${id}/apply`}
                         className="w-full bg-purple-600 hover:bg-purple-500 text-white font-medium py-6 rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2"
                         endContent={<ArrowUpRight className="w-4 h-4" />}
                     >
                         Apply For This Job
-                    </Button>
+                    </Link>
                 </aside>
 
             </div>
