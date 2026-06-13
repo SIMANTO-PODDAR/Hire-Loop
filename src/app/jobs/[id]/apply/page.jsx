@@ -30,8 +30,8 @@ const ApplyPage = async ({ params }) => {
                     <p className="text-zinc-400 text-sm leading-relaxed mb-6">
                         Only job seekers can apply for positions. Please sign in with a seeker account to proceed.
                     </p>
-                    <Link 
-                        href="/auth/signin" 
+                    <Link
+                        href="/auth/signin"
                         className="inline-block w-full px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg text-sm font-medium transition"
                     >
                         Switch Account
@@ -44,19 +44,19 @@ const ApplyPage = async ({ params }) => {
     const applications = await getApplicationsByApplicant(user.id);
 
     const plan = await getPlanById(user?.plan || 'seeker_free')
-    
+
     const job = await getJobById(id);
 
     const applicationCount = applications?.length || 0;
     const hasReachedLimit = applicationCount >= plan.maxApplicationsPerMonth;
-    
+
     // Calculate application usage percentage for a beautiful dynamic progress bar
     const usagePercentage = Math.min((applicationCount / plan.maxApplicationsPerMonth) * 100, 100);
 
     return (
         <div className="w-full min-h-screen bg-zinc-950 text-zinc-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto space-y-8">
-                
+
                 {/* 1. Usage & Quota Tracker Card */}
                 <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-lg">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
@@ -75,10 +75,9 @@ const ApplyPage = async ({ params }) => {
 
                     {/* Progress Bar */}
                     <div className="w-full bg-zinc-800 h-2.5 rounded-full overflow-hidden mb-5">
-                        <div 
-                            className={`h-full transition-all duration-500 rounded-full ${
-                                hasReachedLimit ? 'bg-red-500' : usagePercentage > 66 ? 'bg-amber-500' : 'bg-blue-500'
-                            }`}
+                        <div
+                            className={`h-full transition-all duration-500 rounded-full ${hasReachedLimit ? 'bg-red-500' : usagePercentage > 66 ? 'bg-amber-500' : 'bg-blue-500'
+                                }`}
                             style={{ width: `${usagePercentage}%` }}
                         />
                     </div>
@@ -88,8 +87,8 @@ const ApplyPage = async ({ params }) => {
                         <Rocket className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                         <div className="flex-1 sm:flex sm:items-center sm:justify-between gap-4">
                             <p>Need to apply for more positions? Upgrade your account to unlock unlimited job submissions.</p>
-                            <Link 
-                                href="/plans" 
+                            <Link
+                                href="/plans"
                                 className="inline-block mt-2 sm:mt-0 whitespace-nowrap text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg transition"
                             >
                                 View Plans
@@ -116,7 +115,7 @@ const ApplyPage = async ({ params }) => {
                         <JobApply applicant={user} job={job} />
                     </div>
                 )}
-                
+
             </div>
         </div>
     );

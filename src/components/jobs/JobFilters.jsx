@@ -13,7 +13,7 @@ export default function JobFilters({
   setIsRemoteOnly
 }) {
   return (
-    <div className="flex flex-col gap-4 bg-zinc-900/50 p-6 rounded-[24px] border border-zinc-800/80 max-w-7xl mx-auto mb-10">
+    <div className="flex flex-col gap-4 bg-zinc-900/50 p-6 rounded-3xl border border-zinc-800/80 max-w-7xl mx-auto mb-10">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
 
         {/* 1. Search Text Field - Span 5 columns */}

@@ -10,11 +10,9 @@ export default function SigninPage() {
     // Form fields
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
     const router = useRouter()
     const searchParams = useSearchParams();
     const redirectTo = searchParams.get("redirect") || "/";
-
     // console.log("Redirecting to:", redirectTo);
     // UI States
     const [isVisible, setIsVisible] = useState(false);
@@ -43,8 +41,7 @@ export default function SigninPage() {
                 setSuccess("Signed in successfully! Redirecting...");
                 setEmail("");
                 setPassword("");
-
-                router.push(redirectTo);      //   <---------
+                router.push(redirectTo);
             }
         } catch (err) {
             setError("An unexpected network error occurred.");
